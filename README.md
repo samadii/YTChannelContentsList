@@ -1,4 +1,5 @@
 ## YT Channel Contents Lister
+A Telegram bot to listing youtube channel videos urls.
 
 ## Deploy to Heroku
 
