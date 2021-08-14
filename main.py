@@ -29,7 +29,11 @@ async def start_(event):
 @Bot.on(events.NewMessage(incoming=True))
 async def send(event):
     if event.text and not event.text.startswith("/") and not event.document:
-        input = event.text + '/videos?view=0&sort=dd&shelfid=0'
+        if "/c/" in event.text:
+            id = Data(f"{event.text}")
+            input = f'https://youtube.com/channel/{id.id}/videos?view=0&sort=dd&shelfid=0'
+        else:
+            input = event.text + '/videos?view=0&sort=dd&shelfid=0'
         url = f"{input}"
         try:
             msg = await event.reply("`Processing...`")
