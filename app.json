@@ -6,11 +6,11 @@
             "value": ""
         },
         "API_HASH": {
-            "description": "Your bot token",
+            "description": "Your telegram api hash",
             "value": ""
         },
         "API_ID": {
-            "description": "Your bot token",
+            "description": "Your telegram app id",
             "value": ""
         },
         "GOOGLE_CHROME_BIN": {
