@@ -1,10 +1,4 @@
-#_*_coding: utf-8_*_
-
-import requests
-import threading
-import telepot
-import asyncio
-import os, unittest, time, datetime
+import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -12,17 +6,32 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import InvalidArgumentException
 from selenium.webdriver.chrome.options import Options
 from pyyoutube import Data
+from telethon import TelegramClient, events
+import logging
 
-token = os.environ.get('BOT_TOKEN')
-bot = telepot.Bot(token)
-             
+logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s', level=logging.WARNING)
 
-def START(msg,chat_id):
-    if msg == "/start":
-        bot.sendMessage(chat_id, "Hi ! \nI am a bot to listing youtube channel videos urls, just send me a youtube channel link.")
-    else:
-        url = f"{msg}"
+print("Starting...")
+
+api_id = int(os.environ.get("API_ID", 12345))
+api_hash = os.environ.get("API_HASH")
+bot_token = os.environ.get("BOT_TOKEN")
+try:
+    Bot = TelegramClient("Bot", api_id, api_hash).start(bot_token=bot_token)
+except Exception as e:
+    print(e)
+
+@Bot.on(events.NewMessage(incoming=True, pattern="^/start"))
+async def start_(event):
+    await event.reply("**Hi !**\n\nI am a bot to listing youtube channel videos urls, just send me a youtube channel link.")
+
+
+@Bot.on(events.NewMessage(incoming=True))
+async def send(event):
+    if event.text and not event.text.startswith("/") and not event.document:
+        url = f"{event.text}"
         try:
+            msg = await event.reply("`Processing...`")
             chrome_options = Options()
             chrome_options.add_argument("--user-data-dir=chrome-data")
             chrome_options.add_argument("--headless")
@@ -40,30 +49,10 @@ def START(msg,chat_id):
                 title = yt.title # for more values, see https://github.com/Soebb/PyYouTube#get-videos-data
                 COUNT+=1
                 MESSAGE += f"{COUNT}. [{title}]({result})\n\n"
-            bot.sendMessage(chat_id, MESSAGE, parse_mode='markdown', disable_web_page_preview=True)
+                await msg.edit(MESSAGE)
         except Exception as e:
-            print(e)
-            bot.sendMessage(chat_id, f"Error: {e}")
-                       
-tokenurl = f'https://api.telegram.org/bot{token}'
-Update = tokenurl+"/getUpdates"
-
-
-def UPDATE():
-    MESSAGES = requests.get(Update).json()
-    return MESSAGES['result']
-
-
-while 1:
-    if threading.activeCount()-1 < 15:
-        try:
-            for message in UPDATE():
-                offset = message['update_id']+1
-                offset = Update+f"?offset={offset}"
-                offset = requests.post(offset)
-                msg = message['message']['text']
-                chat_id = message['message']['from']['id']
-                thread = threading.Thread(target=START,args=(msg,chat_id))
-                thread.start()
-        except:
-            pass
+            await msg.edit(f"**ERROR**:\n`{e}`")
+    
+    
+print("Bot has started.")
+Bot.run_until_disconnected()
