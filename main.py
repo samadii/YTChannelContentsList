@@ -29,7 +29,8 @@ async def start_(event):
 @Bot.on(events.NewMessage(incoming=True))
 async def send(event):
     if event.text and not event.text.startswith("/") and not event.document:
-        url = f"{event.text}"
+        input = event.text + '/videos?view=0&sort=dd&shelfid=0'
+        url = f"{input}"
         try:
             msg = await event.reply("`Processing...`")
             chrome_options = Options()
