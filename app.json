@@ -5,6 +5,14 @@
             "description": "Your bot token",
             "value": ""
         },
+        "API_HASH": {
+            "description": "Your bot token",
+            "value": ""
+        },
+        "API_ID": {
+            "description": "Your bot token",
+            "value": ""
+        },
         "GOOGLE_CHROME_BIN": {
             "value": "/app/.apt/usr/bin/google-chrome"
         },
