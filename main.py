@@ -5,7 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import InvalidArgumentException
 from selenium.webdriver.chrome.options import Options
-from pyyoutube import Data
+from py_youtube import Data
 from telethon import TelegramClient, events
 import logging
 
