@@ -30,10 +30,9 @@ async def start_(event):
 async def send(event):
     if event.text and not event.text.startswith("/") and not event.document:
         if "/c/" in event.text:
-            input = event.text + '/videos'
+            url = event.text + '/videos'
         elif "/channel/" in event.text:
-            input = event.text + '/videos?view=0&sort=dd&shelfid=0'
-        url = f"{input}"
+            url = event.text + '/videos?view=0&sort=dd&shelfid=0'
         try:
             msg = await event.reply("`Processing...`")
             chrome_options = Options()
@@ -43,14 +42,14 @@ async def send(event):
             chrome_options.add_argument("--no-sandbox")
             chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
             driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
-            driver.get(url)
+            driver.get(f"{url}")
             links = driver.find_elements_by_xpath('//*[@id="video-title"]')
             MESSAGE = ''
             COUNT = 0      
             for link in links:
                 result = link.get_attribute('href')
                 yt = Data(f"{result}")
-                title = yt.title # for more values, see https://github.com/Soebb/PyYouTube#get-videos-data
+                title = yt.title
                 COUNT+=1
                 MESSAGE += f"{COUNT}. [{title}]({result})\n\n"
                 await msg.edit(MESSAGE)
