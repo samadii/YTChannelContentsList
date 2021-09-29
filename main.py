@@ -1,9 +1,5 @@
 import os
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import InvalidArgumentException
 from selenium.webdriver.chrome.options import Options
 from py_youtube import Data
 from telethon import TelegramClient, events
@@ -49,7 +45,7 @@ async def send(event):
             for link in links:
                 result = link.get_attribute('href')
                 yt = Data(f"{result}")
-                title = yt.title
+                title = yt.title()
                 COUNT+=1
                 MESSAGE += f"{COUNT}. [{title}]({result})\n\n"
                 await msg.edit(MESSAGE)
