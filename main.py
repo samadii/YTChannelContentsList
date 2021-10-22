@@ -38,13 +38,13 @@ async def send(event):
             chrome_options.add_argument("--no-sandbox")
             chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
             driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
-            driver.get(f"{url}")
+            driver.get(url)
             links = driver.find_elements_by_xpath('//*[@id="video-title"]')
             MESSAGE = ''
             COUNT = 0      
             for link in links:
                 result = link.get_attribute('href')
-                yt = Data(f"{result}")
+                yt = Data(result)
                 title = yt.title()
                 COUNT+=1
                 MESSAGE += f"{COUNT}. [{title}]({result})\n\n"
