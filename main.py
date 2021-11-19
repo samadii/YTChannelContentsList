@@ -6,9 +6,12 @@ from telethon import TelegramClient, events
 import logging
 
 logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s', level=logging.WARNING)
-
 print("Starting...")
 
+# system path to chromedriver.exe
+CHROMEDRIVER_PATH = r" "
+
+USE_HEROKU = os.environ.get("USE_HEROKU")
 api_id = int(os.environ.get("API_ID", 12345))
 api_hash = os.environ.get("API_HASH")
 bot_token = os.environ.get("BOT_TOKEN")
@@ -16,6 +19,7 @@ try:
     Bot = TelegramClient("Bot", api_id, api_hash).start(bot_token=bot_token)
 except Exception as e:
     print(e)
+
 
 @Bot.on(events.NewMessage(incoming=True, pattern="^/start"))
 async def start_(event):
@@ -29,19 +33,27 @@ async def send(event):
             url = event.text + '/videos'
         elif "/channel/" in event.text:
             url = event.text + '/videos?view=0&sort=dd&shelfid=0'
+        else:
+            return await event.reply("`Not a YouTube channel URL!`")
+        msg = await event.reply("`Processing...`")
         try:
-            msg = await event.reply("`Processing...`")
-            chrome_options = Options()
-            chrome_options.add_argument("--user-data-dir=chrome-data")
-            chrome_options.add_argument("--headless")
-            chrome_options.add_argument("--disable-dev-shm-usage")
-            chrome_options.add_argument("--no-sandbox")
-            chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-            driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
-            driver.get(url)
-            links = driver.find_elements_by_xpath('//*[@id="video-title"]')
+            if USE_HEROKU == "TRUE":
+                chrome_options = Options()
+                chrome_options.add_argument('--disable-gpu')
+                chrome_options.add_argument('--no-sandbox')
+                chrome_options.headless = True
+                chrome_options.binary_location = "/app/.apt/usr/bin/google-chrome"
+                driver = webdriver.Chrome(executable_path="/app/.chromedriver/bin/chromedriver", options=chrome_options)
+                driver.get(url)
+                links = driver.find_elements_by_xpath('//*[@id="video-title"]')
+            else:
+                chrome_options = webdriver.ChromeOptions()
+                ser = Service(CHROMEDRIVER_PATH)
+                driver = webdriver.Chrome(service=ser, options=chrome_options)
+                driver.get(url)
+                links = driver.find_elements(By.XPATH, '//*[@id="video-title"]')
             MESSAGE = ''
-            COUNT = 0      
+            COUNT = 0
             for link in links:
                 result = link.get_attribute('href')
                 yt = Data(result)
