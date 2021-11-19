@@ -13,7 +13,6 @@ print("Starting...")
 # system path to chromedriver.exe
 CHROMEDRIVER_PATH = r" "
 
-USE_HEROKU = os.environ.get("USE_HEROKU")
 api_id = int(os.environ.get("API_ID", 12345))
 api_hash = os.environ.get("API_HASH")
 bot_token = os.environ.get("BOT_TOKEN")
@@ -39,7 +38,7 @@ async def send(event):
             return await event.reply("`Not a YouTube channel URL!`")
         msg = await event.reply("`Processing...`")
         try:
-            if USE_HEROKU == "TRUE":
+            if (os.environ.get("USE_HEROKU") == "TRUE"):
                 chrome_options = Options()
                 chrome_options.add_argument('--disable-gpu')
                 chrome_options.add_argument('--no-sandbox')
