@@ -17,7 +17,7 @@ A Telegram bot to listing youtube channel videos urls.
 
 3. Add ChromeDriver folder path to your System PATH environment variable.
 
-4. Go to [this line](https://github.com/samadii/YTChannelContentsList/blob/master/main.py#L50) and add path where chromedriver is there.
+4. Go to [this line](https://github.com/samadii/YTChannelContentsList/blob/master/main.py#L14) and add path where chromedriver is there.
 
 5. Enter the directory
    ```
