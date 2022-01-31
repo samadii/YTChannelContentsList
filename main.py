@@ -2,7 +2,6 @@ import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
 from py_youtube import Data
 from telethon import TelegramClient, events
 import logging
@@ -39,7 +38,7 @@ async def send(event):
         msg = await event.reply("`Processing...`")
         try:
             if (os.environ.get("USE_HEROKU") == "TRUE"):
-                chrome_options = Options()
+                chrome_options = webdriver.chrome.options.Options()
                 chrome_options.add_argument('--disable-gpu')
                 chrome_options.add_argument('--no-sandbox')
                 chrome_options.headless = True
@@ -49,8 +48,9 @@ async def send(event):
                 links = driver.find_elements_by_xpath('//*[@id="video-title"]')
             else:
                 chrome_options = webdriver.ChromeOptions()
-                ser = Service(CHROMEDRIVER_PATH)
-                driver = webdriver.Chrome(service=ser, options=chrome_options)
+                chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
+                service = Service(CHROMEDRIVER_PATH)
+                driver = webdriver.Chrome(service=service, options=chrome_options)
                 driver.get(url)
                 links = driver.find_elements(By.XPATH, '//*[@id="video-title"]')
             MESSAGE = ''
