@@ -8,12 +8,12 @@ A Telegram bot to listing youtube channel videos urls.
 
 ## Local Deploying
 
-1. Clone the repo
+1. Install [Google Chrome](https://support.google.com/chrome/answer/95346?hl=en&co=GENIE.Platform%3DDesktop) and download [ChromeDriver](https://chromedriver.chromium.org/downloads).
+
+2. Clone the repo
    ```
    git clone https://github.com/samadii/YTChannelContentsList
    ```
-
-2. Install [Google Chrome](https://support.google.com/chrome/answer/95346?hl=en&co=GENIE.Platform%3DDesktop) and [ChromeDriver](https://chromedriver.chromium.org/downloads).
 
 3. Add ChromeDriver folder path to your System PATH environment variable.
 
