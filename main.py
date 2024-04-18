@@ -2,6 +2,7 @@ import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 from py_youtube import Data
 from telethon import TelegramClient, events
 import logging
@@ -9,8 +10,6 @@ import logging
 logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s', level=logging.WARNING)
 print("Starting...")
 
-# system path to chromedriver.exe
-CHROMEDRIVER_PATH = r" "
 
 api_id = int(os.environ.get("API_ID", 12345))
 api_hash = os.environ.get("API_HASH")
@@ -49,8 +48,7 @@ async def send(event):
             else:
                 chrome_options = webdriver.ChromeOptions()
                 chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
-                service = Service(CHROMEDRIVER_PATH)
-                driver = webdriver.Chrome(service=service, options=chrome_options)
+                driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
                 driver.get(url)
                 links = driver.find_elements(By.XPATH, '//*[@id="video-title"]')
             MESSAGE = ''
